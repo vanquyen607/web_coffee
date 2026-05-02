@@ -1,0 +1,190 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        isAdminEmail(request.auth.token.email) ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    // Faster check for list operations to minimize get() calls
+    function isStaff() {
+      return isSignedIn() && isAdminEmail(request.auth.token.email);
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isVerified() {
+      // Loosened for development/preview to allow email/password users without forced verification
+      return isSignedIn();
+    }
+
+    // --- Validation Blueprints ---
+
+    function isValidProduct(data) {
+      return data.keys().hasAll(['name', 'price', 'category', 'stock', 'active']) &&
+             data.keys().size() >= 5 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.price is number && data.price >= 0 &&
+             data.category in ['Milk Tea', 'Fruit Tea', 'Coffee', 'Bakery', 'Snacks'] &&
+             data.stock is int && data.stock >= 0 &&
+             data.active is bool;
+    }
+
+    function isValidOrder(data) {
+      return data.keys().hasAll(['items', 'total', 'status', 'customerName', 'customerPhone', 'createdAt', 'customerId', 'customerEmail', 'customerAddress', 'updatedAt']) &&
+             data.items is list && data.items.size() > 0 &&
+             data.total is number && data.total >= 0 &&
+             data.status in ['pending', 'processing', 'completed', 'cancelled'] &&
+             data.customerName is string && data.customerName.size() > 0 &&
+             data.customerPhone is string && data.customerPhone.size() > 0 &&
+             data.customerAddress is string && data.customerAddress.size() > 0 &&
+             data.customerId == request.auth.uid &&
+             data.createdAt == request.time &&
+             data.updatedAt == request.time;
+    }
+
+    function isValidReview(data) {
+      return data.keys().hasAll(['productId', 'userId', 'userName', 'rating', 'comment', 'createdAt']) &&
+             data.productId is string && isValidId(data.productId) &&
+             data.userId == request.auth.uid &&
+             data.userName is string &&
+             data.rating is int && data.rating >= 1 && data.rating <= 5 &&
+             data.comment is string && data.comment.size() > 0 && data.comment.size() <= 1000 &&
+             data.createdAt == request.time;
+    }
+
+    function isAdminEmail(email) {
+      return email in ['vanquyen607@gmail.com', 'admin@bento.tea', 'vq607@gmail.com'];
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role', 'displayName', 'photoURL', 'createdAt', 'updatedAt']) &&
+             data.uid == request.auth.uid &&
+             data.email is string &&
+             data.role in ['customer', 'admin'] &&
+             data.displayName is string &&
+             data.photoURL is string;
+    }
+
+    function isValidCoupon(data) {
+      return data.keys().hasAll(['code', 'discountType', 'discountValue', 'active', 'createdAt']) &&
+             data.code is string && data.code.size() > 0 && data.code.size() <= 50 &&
+             data.discountType in ['percentage', 'fixed'] &&
+             data.discountValue is number && data.discountValue >= 0 &&
+             data.active is bool;
+    }
+
+    function isValidSlide(data) {
+      return data.keys().hasAll(['image', 'title', 'order']) &&
+             data.image is string && data.image.size() > 0 &&
+             data.title is string && data.title.size() > 0;
+    }
+
+    // --- Rules ---
+
+    match /users/{userId} {
+      allow get: if (isOwner(userId) || (isSignedIn() && (isAdminEmail(request.auth.token.email) || isAdmin()))) && isValidId(userId);
+      allow list: if isAdmin();
+      
+      allow create: if isOwner(userId) && isValidId(userId) && 
+                      incoming().uid == request.auth.uid &&
+                      (incoming().role == 'customer' || isAdminEmail(incoming().email));
+      
+      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId) && (
+        (isOwner(userId) && (
+          // Allow profile updates - strictly exclude 'role' to avoid escalation
+          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'customerPhone', 'customerAddress', 'updatedAt', 'points']) ||
+          // Allow internal consistency checks
+          (incoming().uid == existing().uid && incoming().email == existing().email && incoming().role == existing().role)
+        )) ||
+        (isAdmin() && incoming().diff(existing()).affectedKeys().hasAny(['role', 'updatedAt', 'points']))
+      );
+    }
+
+    match /products/{productId} {
+      allow get: if isValidId(productId);
+      allow list: if true;
+      
+      allow create: if isAdmin() && isValidId(productId);
+      allow update: if isValidId(productId) && (
+        isAdmin() || 
+        (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['stock']))
+      );
+      allow delete: if isAdmin() && isValidId(productId);
+    }
+
+    match /orders/{orderId} {
+      allow get: if isSignedIn() && (resource.data.customerId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (
+        (resource.data.customerId == request.auth.uid) || 
+        isStaff() ||
+        isAdmin()
+      );
+      
+      allow create: if isSignedIn() && isValidId(orderId) && isValidOrder(incoming());
+      
+      allow update: if isSignedIn() && isValidId(orderId) && (
+        (isAdmin() && incoming().diff(existing()).affectedKeys().hasAny(['status', 'updatedAt'])) ||
+        (resource.data.customerId == request.auth.uid && 
+         existing().status == 'pending' && 
+         incoming().status == 'cancelled' && 
+         incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']))
+      );
+    }
+
+    match /reviews/{reviewId} {
+      allow get: if isValidId(reviewId);
+      allow list: if true;
+      allow create: if isSignedIn() && isValidId(reviewId) && isValidReview(incoming());
+      allow update: if isSignedIn() && isValidId(reviewId) && (isOwner(existing().userId) || isAdmin()) && 
+                    incoming().diff(existing()).affectedKeys().hasOnly(['rating', 'comment', 'updatedAt']);
+      allow delete: if isSignedIn() && isValidId(reviewId) && (isOwner(existing().userId) || isAdmin());
+    }
+
+    match /coupons/{couponId} {
+      allow get: if isSignedIn() && isValidId(couponId);
+      allow list: if isSignedIn();
+      allow create: if isAdmin() && isValidId(couponId) && isValidCoupon(incoming()) && incoming().createdAt == request.time;
+      allow update: if isAdmin() && isValidId(couponId) && (
+        (isValidCoupon(incoming()) && incoming().createdAt == existing().createdAt) ||
+        (incoming().diff(existing()).affectedKeys().hasOnly(['active']))
+      );
+      allow delete: if isAdmin() && isValidId(couponId);
+    }
+
+    match /slides/{slideId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

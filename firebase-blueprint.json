@@ -1,0 +1,140 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A milk tea product available in the shop",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string", "enum": ["Milk Tea", "Fruit Tea", "Cheese Tea", "Toppings", "Snacks"] },
+        "image": { "type": "string" },
+        "stock": { "type": "integer" },
+        "active": { "type": "boolean" },
+        "isPopular": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "price", "category", "stock"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A customer order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "customerAddress": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "productId": { "type": "string" },
+              "name": { "type": "string" },
+              "price": { "type": "number" },
+              "quantity": { "type": "integer" }
+            }
+          }
+        },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "processing", "completed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["items", "total", "status", "customerName", "customerPhone"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile with role management",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "admin"] },
+        "points": { "type": "integer", "description": "Loyalty points earned by the user (1 point per 10k VND)" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Discount codes for orders",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "discountType": { "type": "string", "enum": ["percentage", "fixed"] },
+        "discountValue": { "type": "number" },
+        "minOrderValue": { "type": "number" },
+        "active": { "type": "boolean" },
+        "expiryDate": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "discountType", "discountValue", "active"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "A product review from a customer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "userId", "rating", "comment"]
+    },
+    "Slide": {
+      "title": "Slide",
+      "description": "A banner slide on the home page",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "image": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "description": { "type": "string" },
+        "feature": { "type": "string" },
+        "order": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["image", "title", "order"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Individual product documents"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Individual order documents"
+    },
+    "/coupons/{couponId}": {
+      "schema": "Coupon",
+      "description": "Discount codes"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents"
+    },
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Product reviews"
+    },
+    "/slides/{slideId}": {
+      "schema": "Slide",
+      "description": "Home page banner slides"
+    }
+  }
+}
