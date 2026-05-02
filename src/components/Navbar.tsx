@@ -186,7 +186,7 @@ export function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-white shadow-2xl z-[60] p-8 md:p-12 flex flex-col lg:hidden"
+              className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-white shadow-2xl z-[60] p-8 md:p-12 flex flex-col lg:hidden pointer-events-auto"
             >
               <div className="flex justify-between items-center mb-10">
                  <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-2">

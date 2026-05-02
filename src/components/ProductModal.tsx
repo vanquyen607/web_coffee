@@ -19,9 +19,10 @@ import { toast } from './ui/Toaster';
 interface ProductModalProps {
   product: Product | null;
   onClose: () => void;
+  onSelectProduct?: (product: Product) => void;
 }
 
-export function ProductModal({ product, onClose }: ProductModalProps) {
+export function ProductModal({ product, onClose, onSelectProduct }: ProductModalProps) {
   const { addItem, items } = useCart();
   const { user, profile, isAdmin } = useAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -314,7 +315,11 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-bento-primary">Combo đề xuất</p>
                            <div className="grid grid-cols-2 gap-4">
                               {relatedProducts.map(rp => (
-                                <div key={rp.id} className="group/item flex items-center gap-4 bg-bento-bg/20 p-3 rounded-2xl border border-bento-accent transition-all hover:bg-white hover:shadow-xl hover:border-bento-primary/20 cursor-pointer">
+                                <div 
+                                  key={rp.id} 
+                                  onClick={() => onSelectProduct?.(rp)}
+                                  className="group/item flex items-center gap-4 bg-bento-bg/20 p-3 rounded-2xl border border-bento-accent transition-all hover:bg-white hover:shadow-xl hover:border-bento-primary/20 cursor-pointer"
+                                >
                                   <div className="w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-bento-accent transform group-hover/item:scale-110 transition-transform duration-500">
                                      <img src={rp.image} className="w-full h-full object-cover" alt={rp.name} />
                                   </div>

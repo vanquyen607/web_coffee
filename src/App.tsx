@@ -26,6 +26,11 @@ import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
 function PageLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const { scrollYProgress } = useScroll();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
