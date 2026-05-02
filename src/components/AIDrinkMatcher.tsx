@@ -97,23 +97,23 @@ Lưu ý: Chỉ trả về JSON, không kèm văn bản khác.`;
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-24">
-      <div className="bg-bento-primary-dark rounded-[4rem] p-12 lg:p-24 relative overflow-hidden group shadow-2xl">
+    <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-24">
+      <div className="bg-bento-primary-dark rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-16 lg:p-24 relative overflow-hidden group shadow-2xl">
         {/* Abstract Background Bits */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-bento-primary/20 rounded-full blur-[100px] -mr-48 -mt-48 group-hover:bg-bento-primary/30 transition-colors duration-1000" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-bento-accent/10 rounded-full blur-[80px] -ml-32 -mb-32" />
         
-        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 relative z-10">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24 relative z-10">
           {/* Text Content */}
-          <div className="flex-1 space-y-8 text-center lg:text-left">
+          <div className="flex-1 space-y-8 text-center lg:text-left w-full">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full border border-white/10 backdrop-blur-sm">
                <BrainCircuit className="w-4 h-4 text-bento-accent" />
                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">Chill AI Assistant</span>
             </div>
-            <h2 className="text-5xl lg:text-7xl font-display font-black tracking-tighter uppercase leading-[0.85] text-white">
+            <h2 className="text-4xl md:text-5xl lg:text-7xl font-display font-black tracking-tighter uppercase leading-[0.85] text-white">
               Cảm hứng <br/> <span className="text-bento-accent">VỊ GIÁC</span> Từ AI
             </h2>
-            <p className="text-lg text-white/60 font-medium leading-relaxed max-w-lg">
+            <p className="text-sm md:text-lg text-white/60 font-medium leading-relaxed max-w-lg mx-auto lg:mx-0">
               Bạn đang cảm thấy thế nào? Hãy chia sẻ với trợ lý mã hóa hương vị của chúng tôi để tìm thấy ly nước "định mệnh" dành riêng cho bạn ngay lúc này.
             </p>
 
@@ -125,19 +125,19 @@ Lưu ý: Chỉ trả về JSON, không kèm văn bản khác.`;
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   onSubmit={handleMatch} 
-                  className="relative group/form"
+                  className="relative group/form w-full"
                 >
                   <input 
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="VD: 'Đang mệt mỏi sau giờ làm', 'Cần gì đó thật mát lạnh',..."
-                    className="w-full bg-white/5 border border-white/10 rounded-[2.5rem] px-8 py-6 text-white text-sm font-medium focus:outline-none focus:ring-4 focus:ring-bento-primary/20 transition-all placeholder:text-white/20 capitalize pr-20"
+                    placeholder="VD: 'Mệt mỏi sau giờ làm'..."
+                    className="w-full bg-white/5 border border-white/10 rounded-[2rem] px-6 py-5 md:px-8 md:py-6 text-white text-sm font-medium focus:outline-none focus:ring-4 focus:ring-bento-primary/20 transition-all placeholder:text-white/20 capitalize pr-20"
                   />
                   <button 
                     disabled={loading || !input.trim()}
-                    className="absolute right-3 top-3 bottom-3 aspect-square bg-bento-accent text-bento-primary rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-xl shadow-bento-accent/20 disabled:opacity-50"
+                    className="absolute right-2 top-2 bottom-2 aspect-square bg-bento-accent text-bento-primary rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-xl shadow-bento-accent/20 disabled:opacity-50"
                   >
-                    {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                    {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   </button>
                 </motion.form>
               ) : (
@@ -145,35 +145,35 @@ Lưu ý: Chỉ trả về JSON, không kèm văn bản khác.`;
                    key="result"
                    initial={{ opacity: 0, scale: 0.9 }}
                    animate={{ opacity: 1, scale: 1 }}
-                   className="bg-white/10 backdrop-blur-xl rounded-[3rem] p-8 lg:p-10 border border-white/20 relative group/result"
+                   className="bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-6 lg:p-10 border border-white/20 relative group/result w-full"
                 >
                    <button 
                      onClick={clear}
-                     className="absolute -top-4 -right-4 w-12 h-12 bg-white text-bento-primary-dark rounded-full shadow-xl flex items-center justify-center hover:rotate-90 transition-transform"
+                     className="absolute -top-3 -right-3 w-10 h-10 md:w-12 md:h-12 bg-white text-bento-primary-dark rounded-full shadow-xl flex items-center justify-center hover:rotate-90 transition-transform z-20"
                    >
                      <RefreshCw className="w-5 h-5" />
                    </button>
 
-                   <div className="flex flex-col md:flex-row gap-10 items-center">
+                   <div className="flex flex-col md:flex-row gap-8 items-center text-center md:text-left">
                      {recommendation.product?.image && (
-                        <div className="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] overflow-hidden border-4 border-white/10 shadow-2xl group-hover/result:scale-110 transition-transform duration-700 shrink-0">
+                        <div className="w-24 h-24 md:w-40 md:h-40 rounded-[2rem] overflow-hidden border-4 border-white/10 shadow-2xl group-hover/result:scale-105 transition-transform duration-700 shrink-0">
                            <img src={recommendation.product.image} className="w-full h-full object-cover" alt="Suggest" />
                         </div>
                      )}
-                     <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                           <span className="text-3xl">{recommendation.moodEmoji}</span>
-                           <div className="h-px w-8 bg-bento-accent/40" />
-                           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-bento-accent">Perfect match found</span>
+                     <div className="space-y-3 md:space-y-4">
+                        <div className="flex items-center justify-center md:justify-start gap-3">
+                           <span className="text-2xl md:text-3xl">{recommendation.moodEmoji}</span>
+                           <div className="h-px w-6 md:w-8 bg-bento-accent/40" />
+                           <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-bento-accent">Perfect match found</span>
                         </div>
-                        <h3 className="text-3xl font-display font-black text-white uppercase tracking-tight">{recommendation.productName}</h3>
-                        <p className="text-sm text-white/50 leading-relaxed italic">"{recommendation.reason}"</p>
-                        <div className="pt-4 flex gap-4">
+                        <h3 className="text-2xl md:text-3xl font-display font-black text-white uppercase tracking-tight">{recommendation.productName}</h3>
+                        <p className="text-xs md:text-sm text-white/50 leading-relaxed italic">"{recommendation.reason}"</p>
+                        <div className="pt-2 flex justify-center md:justify-start gap-4">
                            <button 
                              onClick={() => recommendation.product && onOpenDetails?.(recommendation.product)}
                              className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-bento-accent transition-colors group/btn"
                            >
-                              Chi tiết món <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1" />
+                               Thử ngay món này <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1" />
                            </button>
                         </div>
                      </div>

@@ -81,8 +81,8 @@ export function ProductCard({ product, onOpenDetails }: ProductCardProps) {
         </div>
 
         {/* Quick View Overlay (Mobile & Desktop Tip) */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[85%] opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 z-20">
-          <div className="bg-white/80 backdrop-blur-xl py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center shadow-xl border border-white/20">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[85%] opacity-100 lg:opacity-0 translate-y-0 lg:translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 z-20">
+          <div className="bg-white/80 backdrop-blur-xl py-2.5 lg:py-3 rounded-2xl text-[8px] lg:text-[9px] font-black uppercase tracking-widest text-center shadow-xl border border-white/20">
             Xem chi tiết
           </div>
         </div>
@@ -110,7 +110,7 @@ export function ProductCard({ product, onOpenDetails }: ProductCardProps) {
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 className={cn(
-                  "w-10 h-10 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all shadow-md shrink-0 border border-transparent",
+                  "w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all shadow-md shrink-0 border border-transparent",
                   recentlyAdded 
                     ? "bg-green-500 text-white" 
                     : isInCart 

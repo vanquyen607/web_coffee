@@ -149,7 +149,7 @@ export function ProductModal({ product, onClose, onSelectProduct }: ProductModal
             {/* Close Button Mobile */}
             <button 
               onClick={onClose}
-              className="absolute top-4 right-4 z-50 p-2 bg-white/90 backdrop-blur-md rounded-full shadow-lg lg:hidden"
+              className="absolute top-4 right-4 z-50 w-10 h-10 bg-white/90 backdrop-blur-md rounded-full shadow-lg lg:hidden flex items-center justify-center border border-black/5"
             >
               <X className="w-5 h-5" />
             </button>
@@ -472,7 +472,7 @@ export function ProductModal({ product, onClose, onSelectProduct }: ProductModal
                      <div className="flex items-center gap-4 bg-bento-bg p-2 rounded-2xl border border-bento-accent">
                         <button 
                           onClick={() => setItemQuantity(Math.max(1, itemQuantity - 1))}
-                          className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-xl shadow-md hover:text-bento-primary transition-all active:scale-90 disabled:opacity-30"
+                          className="w-11 h-11 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-xl shadow-md hover:text-bento-primary transition-all active:scale-95 disabled:opacity-30"
                           disabled={itemQuantity <= 1}
                         >
                           <Minus className="w-5 h-5" />
@@ -480,7 +480,7 @@ export function ProductModal({ product, onClose, onSelectProduct }: ProductModal
                         <span className="text-xl font-black w-8 text-center">{itemQuantity}</span>
                         <button 
                           onClick={() => setItemQuantity(itemQuantity + 1)}
-                          className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-xl shadow-md hover:text-bento-primary transition-all active:scale-90"
+                          className="w-11 h-11 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-xl shadow-md hover:text-bento-primary transition-all active:scale-95"
                         >
                           <Plus className="w-5 h-5" />
                         </button>

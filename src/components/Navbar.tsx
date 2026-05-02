@@ -162,9 +162,9 @@ export function Navbar() {
             {/* Mobile Menu Toggle */}
             <button 
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-3 bg-white border border-bento-accent rounded-2xl text-bento-primary shadow-sm active:scale-90 transition-all"
+              className="lg:hidden w-12 h-12 bg-white border border-bento-accent rounded-2xl text-bento-primary shadow-sm active:scale-90 transition-all flex items-center justify-center"
             >
-              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -198,12 +198,12 @@ export function Navbar() {
                       <span className="text-[7px] font-black uppercase tracking-widest opacity-30">Vietnamese Spirit</span>
                     </div>
                  </Link>
-                 <button onClick={() => setIsOpen(false)} className="p-3 bg-bento-bg rounded-2xl active:scale-90 transition-all border border-bento-accent/50">
-                  <X className="w-5 h-5 text-bento-text/60" />
+                 <button onClick={() => setIsOpen(false)} className="w-12 h-12 bg-bento-bg rounded-2xl active:scale-95 transition-all border border-bento-accent/50 flex items-center justify-center">
+                  <X className="w-6 h-6 text-bento-text/60" />
                 </button>
               </div>
 
-              <div className="flex-1 space-y-4 overflow-y-auto no-scrollbar py-4">
+              <div className="flex-1 space-y-6 overflow-y-auto no-scrollbar py-8">
                 {navLinks.map((link, i) => (
                   <motion.div
                     key={link.path}
@@ -215,9 +215,9 @@ export function Navbar() {
                       to={link.path}
                       onClick={() => setIsOpen(false)}
                       className={cn(
-                        "block py-3 px-6 rounded-2xl text-2xl font-black tracking-tight uppercase transition-all",
+                        "block py-5 px-6 rounded-2xl text-3xl font-black tracking-tight uppercase transition-all",
                         location.pathname === link.path 
-                          ? "text-bento-primary bg-bento-primary/5" 
+                          ? "text-bento-primary bg-bento-primary/5 shadow-sm" 
                           : "text-bento-text/20 hover:text-bento-primary hover:bg-bento-bg"
                       )}
                     >

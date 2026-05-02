@@ -44,14 +44,14 @@ export function CartDrawer() {
               </div>
               <button 
                 onClick={closeCart}
-                className="w-10 h-10 rounded-full bg-bento-bg flex items-center justify-center hover:bg-bento-accent transition-colors"
+                className="w-12 h-12 rounded-2xl bg-bento-bg flex items-center justify-center hover:bg-bento-accent transition-all active:scale-90 border border-bento-accent/50"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" />
               </button>
             </div>
 
             {/* Items List */}
-            <div className="flex-1 overflow-y-auto p-8 space-y-6">
+            <div className="flex-1 overflow-y-auto p-8 space-y-8 no-scrollbar">
               {items.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
                   <div className="w-20 h-20 bg-bento-bg rounded-full flex items-center justify-center text-bento-text/10">
@@ -72,15 +72,15 @@ export function CartDrawer() {
                     layout
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex gap-4 group"
+                    className="flex gap-5 group"
                   >
-                    <div className="w-20 h-20 bg-bento-bg rounded-2xl overflow-hidden shrink-0">
+                    <div className="w-24 h-24 bg-bento-bg rounded-2xl overflow-hidden shrink-0 border border-bento-accent/50">
                       {item.image && (
                         <img src={item.image} className="w-full h-full object-cover" alt={item.name} />
                       )}
                     </div>
-                    <div className="flex-1 space-y-1">
-                      <h4 className="text-sm font-bold tracking-tight">{item.name}</h4>
+                    <div className="flex-1 space-y-1.5 min-w-0">
+                      <h4 className="text-sm font-black tracking-tight line-clamp-1">{item.name}</h4>
                       {item.options && (
                         <div className="space-y-0.5">
                           {(item.options.sugar || item.options.ice) && (
@@ -91,35 +91,35 @@ export function CartDrawer() {
                             </p>
                           )}
                           {item.options.note && (
-                            <p className="text-[8px] font-bold text-bento-primary/60 italic truncate max-w-[180px]">
+                            <p className="text-[9px] font-bold text-bento-primary/60 italic truncate">
                               "{item.options.note}"
                             </p>
                           )}
                         </div>
                       )}
-                      <p className="text-xs font-black text-bento-primary">{formatCurrency(item.price)}</p>
+                      <p className="text-sm font-black text-bento-primary">{formatCurrency(item.price)}</p>
                       
-                      <div className="flex items-center justify-between pt-2">
-                        <div className="flex items-center gap-3 bg-bento-bg rounded-lg p-1 scale-90 -ml-2">
+                      <div className="flex items-center justify-between pt-3">
+                        <div className="flex items-center gap-4 bg-bento-bg rounded-xl p-1.5 border border-bento-accent/30">
                           <button 
                             onClick={() => updateQuantity(item.productId, item.quantity - 1, item.options)}
-                            className="w-6 h-6 flex items-center justify-center hover:bg-white rounded transition-colors"
+                            className="w-10 h-10 flex items-center justify-center bg-white rounded-lg transition-all active:scale-90 shadow-sm"
                           >
-                            <Minus className="w-3 h-3" />
+                            <Minus className="w-4 h-4" />
                           </button>
-                          <span className="text-[10px] font-black w-4 text-center">{item.quantity}</span>
+                          <span className="text-xs font-black w-6 text-center">{item.quantity}</span>
                           <button 
                             onClick={() => updateQuantity(item.productId, item.quantity + 1, item.options)}
-                            className="w-6 h-6 flex items-center justify-center hover:bg-white rounded transition-colors"
+                            className="w-10 h-10 flex items-center justify-center bg-white rounded-lg transition-all active:scale-90 shadow-sm"
                           >
-                            <Plus className="w-3 h-3" />
+                            <Plus className="w-4 h-4" />
                           </button>
                         </div>
                         <button 
                           onClick={() => removeItem(item.productId, item.options)}
-                          className="w-8 h-8 flex items-center justify-center text-red-300 hover:text-red-500 transition-colors"
+                          className="w-10 h-10 flex items-center justify-center text-rose-300 hover:text-rose-500 transition-all active:scale-90"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                     </div>
